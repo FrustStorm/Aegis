@@ -46,7 +46,7 @@ jobs:
       - name: Push Docker image
         run: |
           docker push ghcr.io/fruststorm/aegis-app:latest
-          echo "success"
+          echo "END"
 
 
 
