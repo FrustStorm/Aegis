@@ -29,14 +29,10 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          cd app
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run unit tests
-        run: |
-          cd app
-          python -m pytest -q
+        run: python -m pytest -q
 
       - name: Log in to GHCR
         run: echo "${{ secrets.GITHUB_TOKEN}}" | docker login ghcr -u ${{ github.actor }} --password-stdin
