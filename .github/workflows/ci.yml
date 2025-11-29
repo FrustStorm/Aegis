@@ -37,15 +37,15 @@ jobs:
         run: python -m pytest -q
 
       - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN}}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN}}" | docker login ghcr.io -u fruststorm --password-stdin
 
       - name: Build docker image
         run: |
-          docker build -t ghcr.io/${{ github.actor }}/aegis-app:latest ./app
+          docker build -t ghcr.io/fruststorm/aegis-app:latest ./app
 
       - name: Push Docker image
         run: |
-          docker push ghcr.io/${{ github.actor }}/aegis-app:latest
+          docker push ghcr.io/fruststorm/aegis-app:latest
 
 
 
