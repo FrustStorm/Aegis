@@ -37,7 +37,7 @@ jobs:
         run: python -m pytest -q
 
       - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN}}" | docker login ghcr -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN}}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Build docker image
         run: |
