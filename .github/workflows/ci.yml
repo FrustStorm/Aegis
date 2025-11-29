@@ -1,4 +1,4 @@
-name: my first CI pipeline
+name: CI Pipeline
 
 
 on:
@@ -13,17 +13,47 @@ jobs:
     runs-on: ubuntu-latest
 
 
+    permissions:
+      contents: read
+      packages: write
+
+
     steps:
       - name: Checkout repository
         uses : actions/checkout@v3
 
 
-      - name: Say Hello
-        run: echo "Hello CI"
+      - name: Set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
 
-
-      - name: Run a simple test script
+      - name: Install dependencies
         run: |
-          echo "Running test..."
-          echo "Test successful!"
+          cd app
+          pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: |
+          cd app
+          python -m pytest -q
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN}}" | docker login ghcr -u ${{ github.actor }} --password-stdin
+
+      - name: Build docker image
+        run: |
+          docker build -t ghcr.io/${{ github.actor }}/aegis-app:latest ./app
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.actor }}/aegis-app:latest
+
+
+
+
+
+
+
+      
           
