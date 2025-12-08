@@ -6,5 +6,5 @@ node_modules/
 .DS_Store
 .vscode/
 .idea/
-*.tfvars
+terraform.tfvars
 k8s/secret.yaml
