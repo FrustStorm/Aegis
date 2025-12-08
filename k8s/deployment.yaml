@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aegis-deployment
+  namespace: aegis
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: aegis
+  template:
+    metadata:
+      labels:
+        app: aegis
+    spec:
+      containers:
+      - name: aegis-container
+        image: ghcr.io/fruststorm/aegis-app:latest
+        ports:
+          - containerPort: 5000
+        env:
+          - name: Environment
+            valueFrom:
+              configMapKeyRef:
+                name: aegis-config
+                key: Environment
+
+          - name: app_name
+            valueFrom:
+              configMapKeyRef:
+                name: aegis-config
+                key: appName
+
+          - name: Debug
+            valueFrom:
+              configMapKeyRef:
+                name: aegis-config
+                key: debug
+
+          - name: Secret
+            valueFrom:
+              secretKeyRef:
+                name: aegis-secret
+                key: SECRET
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: aegis-service
+  namespace: aegis
+spec:
+  type: NodePort
+  selector:
+    app: aegis
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30007
