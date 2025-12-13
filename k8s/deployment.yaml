@@ -37,11 +37,11 @@ spec:
                 name: aegis-config
                 key: debug
 
-          - name: Secret
+          - name: API-KEY
             valueFrom:
               secretKeyRef:
                 name: aegis-secret
-                key: SECRET
+                key: API-KEY
 
         readinessProbe:
           httpGet:
