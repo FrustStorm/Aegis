@@ -20,11 +20,19 @@ jobs:
 
     # 1. Gitleaks ( secret scan )
 
+      - name: Install Gitleaks
+        run: |
+          curl -sSl https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks_8.30.0_linux_arm64.tar.gz | tar xz
+          sudo mv gitleaks /usr/local/bin/
+
       - name: Run Gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          arg: detect --source . --no-git --exit-code 1
+        run: |
+          gitleaks detect --source . --no-git --exit-code 1
+          
+        
+
+       
+
 
 
     # 2. Semgrep ( SAST )
