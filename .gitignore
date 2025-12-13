@@ -8,3 +8,4 @@ node_modules/
 .idea/
 Terraform/terraform.tfvars
 k8s/secret.yaml
+!k8s/sealed-secret.yaml
