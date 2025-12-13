@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Gitleaks
         run: |
-          gitleaks detect --source . --no-git --exit-code 1
+          gitleaks detect --source . --verbose
           
         
 
