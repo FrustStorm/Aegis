@@ -24,6 +24,7 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          arg: detect --source . --no-git --exit-code 1
 
 
     # 2. Semgrep ( SAST )
