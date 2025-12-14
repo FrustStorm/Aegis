@@ -1,0 +1,9 @@
+[allowlist]
+description = "Ignore generated files and artifacts"
+paths = [
+    ".pytest_cache/",
+    "__pycache__/",
+    ".venv/",
+    ".idea/",
+    ".github/"
+]
