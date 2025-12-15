@@ -9,7 +9,70 @@ on:
 
 
 jobs:
-  test-job:
+  security-tests:
+    runs-on: ubuntu-latest
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+
+    # 1. Gitleaks ( secret scan )
+
+      - name: Install Gitleaks
+        run: |
+          wget https://github.com/gitleaks/gitleaks/releases/download/v8.30.0/gitleaks_8.30.0_linux_x64.tar.gz
+          tar -xzf gitleaks_8.30.0_linux_x64.tar.gz
+          sudo mv gitleaks /usr/local/bin/
+
+      - name: clean workSpace
+        run: |
+          rm -rf .pytest_cache || true
+          rm -rf __pycache__ || true
+
+      - name: Run Gitleaks
+        run: |
+          gitleaks detect --source . --no-git --exit-code 1
+          
+        
+
+       
+
+
+
+    # 2. Semgrep ( SAST )
+
+      - name: Run semgrep SAST
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: "p/ci"  # For production rulesets
+
+
+    # 3. Trivy file system scan
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl
+          curl -sfl https://raw.githubusercontent.com/aquasecurity/trivy/refs/heads/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin   
+          
+          
+
+      - name: Trivy file system scan ( Dependency + config )
+        run: trivy fs --exit-code 1 --severity CRITICAL,HIGH .
+
+
+    # 4. Checkov ( Iac security scan )
+      - name: Checkov - Terraform scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: ./Terraform
+          soft_fail: true
+
+
+  build-and-test:
+    needs: security-tests
     runs-on: ubuntu-latest
 
 
@@ -21,7 +84,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
 
       - name: Set up python
         uses: actions/setup-python@v4
@@ -42,6 +104,17 @@ jobs:
       - name: Build docker image
         run: |
           docker build -t ghcr.io/fruststorm/aegis-app:latest ./app
+          
+
+      # 5. Trivy Image scan
+
+      - name: Trivy image scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: ghcr.io/fruststorm/aegis-app:latest
+          severity: CRITICAL,HIGH
+          exit-code: 1
+
 
       - name: Push Docker image
         run: |
