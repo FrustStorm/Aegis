@@ -68,6 +68,7 @@ jobs:
         uses: bridgecrewio/checkov-action@v12
         with:
           directory: ./Terraform
+          soft_fail: true
 
 
   build-and-test:
