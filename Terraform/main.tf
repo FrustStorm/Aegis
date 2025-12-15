@@ -44,7 +44,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "aegis_encryption"
 
 # Enable Access logging
 # checkov:skip=CKV2_AWS_62: Event notification is not required for a demo project
-## checkov:skip=CKV_AWS_144: Cross-region replication is out of scope for this project
+# checkov:skip=CKV_AWS_144: Cross-region replication is out of scope for this project
 resource "aws_s3_bucket" "aegis_logs" {
   bucket = "${var.bucket_name}-logs"
 }
@@ -74,7 +74,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "aegis_logs_encryp
     }
   }
 }
-
+# checkov:skip=CKV_AWS_300: Abort multipart uploads is configured but flagged due to Checkov limitations
 resource "aws_s3_bucket_lifecycle_configuration" "aegis_logs_lifecycle" {
   bucket = aws_s3_bucket.aegis_logs.id
 
@@ -98,6 +98,7 @@ resource "aws_s3_bucket_logging" "aegis_logging" {
 }
 
 # Lifecyle rules
+# checkov:skip=CKV_AWS_300: Abort multipart uploads is configured but flagged due to Checkov limitations
 resource "aws_s3_bucket_lifecycle_configuration" "aegis_lifecycle" {
   bucket = aws_s3_bucket.aegis_bucket.id
   rule {
