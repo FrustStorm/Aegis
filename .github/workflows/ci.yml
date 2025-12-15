@@ -109,7 +109,12 @@ jobs:
       # 5. Trivy Image scan
 
       - name: Trivy image scan
-        run: trivy image --exit-code 1 --severity CRITICAL,HIGH ghcr.io/fruststorm/aegis-app:latest
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: ghcr.io/fruststorm/aegis-app:latest
+          severity: CRITICAL,HIGH
+          exit-code: 1
+
 
       - name: Push Docker image
         run: |
