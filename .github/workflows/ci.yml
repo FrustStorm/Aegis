@@ -155,7 +155,8 @@ jobs:
             -v ${{ github.workspace }}:/zap/wrk \
           ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
           -t http://localhost:5000 \
-          -r zap_report.html
+          -r zap_report.html \
+          -I
 
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v4
