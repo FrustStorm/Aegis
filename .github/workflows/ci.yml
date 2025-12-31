@@ -146,7 +146,9 @@ jobs:
             fi
             sleep 1
           done
-
+      - name: Fix permission for ZAP
+        run: |
+          sudo chown -R 1000:1000 ${{ github.workspace }}
       - name: Run OWASP ZAP Baseline scan
         run: |
           docker run --rm --network host \
