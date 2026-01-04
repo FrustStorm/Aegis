@@ -16,6 +16,11 @@ spec:
       containers:
       - name: aegis-container
         image: ghcr.io/fruststorm/aegis-app:latest
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1000
+          allowPrivilegeEscalation: false
+
         ports:
           - containerPort: 5000
         env:
