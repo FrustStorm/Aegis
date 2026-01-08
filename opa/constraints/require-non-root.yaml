@@ -9,3 +9,5 @@ spec:
         kinds: ["Pod"]
       - apiGroups: ["apps"]
         kinds: ["Deployment"]
+    excludedNamespaces:
+      - monitoring
